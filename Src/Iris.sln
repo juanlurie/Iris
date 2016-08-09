@@ -26,10 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.ServiceHost", "Iris.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.Simulator", "Iris.Simulator\Iris.Simulator.csproj", "{B8254DD5-90A2-4602-A907-23CC4B4731A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.Security.OAuth.Server", "Iris.Security.OAuth.Server\Iris.Security.OAuth.Server.csproj", "{950F589B-81B9-45D1-917E-69FDD8B886B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.Security.OAuth", "Iris.Security.OAuth\Iris.Security.OAuth.csproj", "{14E036DF-DBC1-4AC8-BFDE-AAD4D5A1B7EE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,14 +64,6 @@ Global
 		{B8254DD5-90A2-4602-A907-23CC4B4731A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8254DD5-90A2-4602-A907-23CC4B4731A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8254DD5-90A2-4602-A907-23CC4B4731A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{950F589B-81B9-45D1-917E-69FDD8B886B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{950F589B-81B9-45D1-917E-69FDD8B886B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{950F589B-81B9-45D1-917E-69FDD8B886B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{950F589B-81B9-45D1-917E-69FDD8B886B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14E036DF-DBC1-4AC8-BFDE-AAD4D5A1B7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14E036DF-DBC1-4AC8-BFDE-AAD4D5A1B7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14E036DF-DBC1-4AC8-BFDE-AAD4D5A1B7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14E036DF-DBC1-4AC8-BFDE-AAD4D5A1B7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,12 +1,10 @@
-set var=1.0.10
+set var=1.0.11
 
 c:\LocalNugetPackages\nuget pack Iris.Core.nuspec -Version %var%
 c:\LocalNugetPackages\nuget pack Iris.Messaging.nuspec -Version %var%
 c:\LocalNugetPackages\nuget pack Iris.EntityFramework.nuspec -Version %var%
 c:\LocalNugetPackages\nuget pack Iris.ServiceHost.nuspec -Version %var%
 c:\LocalNugetPackages\nuget pack Iris.Autofac.nuspec -Version %var%
-c:\LocalNugetPackages\nuget pack Iris.Security.OAuth.nuspec  -Version %var%
-c:\LocalNugetPackages\nuget pack Iris.Security.OAuth.Server.nuspec  -Version %var%
 
 move *.nupkg c:\\LocalNugetPackages
 

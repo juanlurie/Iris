@@ -16,21 +16,15 @@ namespace Iris.Security.OAuth.Server.Controllers
         {
             this.accountabilityQueryService = accountabilityQueryService;
         }
-        
-        [Route("api/accountability/{id}/team-members")]
-        public HttpResponseMessage GetTeamMembersWithRole(Guid id)
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, id, JsonMediaType);
-        }
 
-        [Route("api/accountability/{id:guid}/team-members/{role:guid}")]
-        public HttpResponseMessage GetTeamMembersWithRole(Guid id, Guid role)
+        [Route("api/accountability/{id}/team-members/{role}")]
+        public HttpResponseMessage GetUsersWithRole(Guid id, Guid role)
         {
-            AccountabilityDto[] result = accountabilityQueryService.GetTeamMembersWithRole(id, role);
+            AccountabilityDto[] result = accountabilityQueryService.GetUsersWithRole(id, role);
             return Request.CreateResponse(HttpStatusCode.OK, result, JsonMediaType);
         }
 
-        [Route("api/accountability/{id:guid}/roles/")]
+        [Route("api/accountability/{id}/roles/")]
         public HttpResponseMessage GetRolesForUser(Guid id)
         {
             AccountabilityDto[] result = accountabilityQueryService.GetRolesForUser(id);

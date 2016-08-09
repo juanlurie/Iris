@@ -18,9 +18,9 @@ namespace Iris.Security.OAuth.Server.QueryServices
                          .Include(a => a.User);
         }
 
-        public AccountabilityDto[] GetTeamMembersWithRole(Guid accountableUserId, Guid teamMemberRoleId)
+        public AccountabilityDto[] GetUsersWithRole(Guid accountableUserId, Guid roleId)
         {
-            var accountabilities = query.Where(a => a.Role.Id == teamMemberRoleId && a.Id != accountableUserId)
+            var accountabilities = query.Where(a => a.Role.Id == roleId && a.Id != accountableUserId)
                                         .Select(x => new AccountabilityDto
                                         {
                                             Role = x.Role.Name,
