@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Iris.Security.OAuth.Server</id>
+    <version>$version$</version>
+    <authors>Juan Lurie</authors>
+    <owners>Juan Lurie</owners>
+    <projectUrl>https://github.com/JuanLurie/Iris</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Iris.Security.OAuth.Server</description>
+    <dependencies>
+	    <dependency id="Iris.Core"/>
+	    <dependency id="Iris.EntityFramework"/>
+	    <dependency id="Iris.Security.OAuth"/>
+		<dependency id="Autofac"/>
+		<dependency id="Autofac.WebApi2"/>
+		<dependency id="EntityFramework"/>
+		<dependency id="Microsoft.AspNet.Cors"/>
+		<dependency id="Microsoft.AspNet.WebApi"/>
+		<dependency id="Microsoft.AspNet.WebApi.WebHost"/>
+		<dependency id="Microsoft.Owin.Cors"/>
+		<dependency id="Microsoft.Owin.Security.OAuth"/>
+	   	<dependency id="Stateless"/>
+		<dependency id="CommonServiceLocator"/>
+		<dependency id="log4net"/>
+		<dependency id="Microsoft.AspNet.WebApi.Client"/>
+		<dependency id="Microsoft.AspNet.WebApi.Core"/>
+		<dependency id="Microsoft.AspNet.WebApi.Owin"/>
+		<dependency id="Microsoft.Owin" version="3.0.1"/>
+		<dependency id="Microsoft.Owin.Host.SystemWeb"/>
+		<dependency id="Microsoft.Owin.Security"/>
+		<dependency id="Newtonsoft.Json"/>
+		<dependency id="Owin"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\bin\Iris.Security.OAuth.Server.dll" target="lib\net45" />
+    <file src="..\bin\Iris.Security.OAuth.Server.pdb" target="lib\net45" />
+  </files>
+</package>

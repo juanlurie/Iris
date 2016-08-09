@@ -66,6 +66,7 @@
     <Compile Include="Ioc\ServiceLocatorExtensions.cs" />
     <Compile Include="Ioc\WebSafeThreadLocal.cs" />
     <Compile Include="Messaging\CommandValidationException.cs" />
+    <Compile Include="Messaging\IDomainCommand.cs" />
     <Compile Include="Messaging\IHermesMessage.cs" />
     <Compile Include="Messaging\IDomainEvent.cs" />
     <Compile Include="Messaging\IValidateCommand.cs" />
