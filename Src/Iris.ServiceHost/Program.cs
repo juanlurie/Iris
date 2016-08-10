@@ -70,9 +70,9 @@ namespace Iris.ServiceHost
         {
             var appSettings = (AppSettingsSection)configuration.GetSection("appSettings");
 
-            if (appSettings.Settings.AllKeys.Any(s => s.Equals("hermes:useLogFile")))
+            if (appSettings.Settings.AllKeys.Any(s => s.Equals("iris:useLogFile")))
             {
-                return appSettings.Settings["hermes:useLogFile"].Value == "true";
+                return appSettings.Settings["iris:useLogFile"].Value == "true";
             }
 
             return false;
@@ -101,7 +101,7 @@ namespace Iris.ServiceHost
 
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            CriticalError.Raise("Hermes Service Host is shutting down due an unhandled exception.", (Exception)e.ExceptionObject);
+            CriticalError.Raise("Iris Service Host is shutting down due an unhandled exception.", (Exception)e.ExceptionObject);
         }
 
         private static void OnCriticalError(string message, Exception exception)
@@ -120,7 +120,7 @@ namespace Iris.ServiceHost
             {
                 if (Environment.UserInteractive)
                 {
-                    Console.WriteLine("\nHermes Service Host is shutting down due to a fatal error. Press any key to exit.");
+                    Console.WriteLine("\nIris Service Host is shutting down due to a fatal error. Press any key to exit.");
                     Console.ReadKey();
                     Environment.Exit(-1);
                 }
@@ -132,9 +132,9 @@ namespace Iris.ServiceHost
         private static void PrintWelcomeMessage()
         {
             #if DEBUG
-            Console.WriteLine(@"Hermes.ServiceHost : Running in DEBUG mode");
+            Console.WriteLine(@"Iris.ServiceHost : Running in DEBUG mode");
             #else 
-            Console.WriteLine(@"Hermes.ServiceHost : Running in RELEASE mode");
+            Console.WriteLine(@"Iris.ServiceHost : Running in RELEASE mode");
             #endif
         }
     }

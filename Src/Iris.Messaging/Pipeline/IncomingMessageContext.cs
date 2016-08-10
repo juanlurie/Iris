@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using Iris.Ioc;
 using Iris.Logging;
+using Iris.Messaging.Configuration;
 using Iris.Messaging.Transports;
 using Iris.Pipes;
 using Microsoft.Practices.ServiceLocation;
@@ -11,13 +12,14 @@ namespace Iris.Messaging.Pipeline
 {
     public class IncomingMessageContext : IMessageContext, IEquatable<IMessageContext>, IEquatable<IncomingMessageContext>
     {
-        public static readonly ILog Logger = LogFactory.BuildLogger(typeof(IncomingMessageContext));
+        public static readonly ILog Logger = LogFactory.BuildLogger(typeof (IncomingMessageContext));
         public TransportMessage TransportMessage { get; private set; }
         public bool IsLocalMessage { get; private set; }
         public IServiceLocator ServiceLocator { get; private set; }
 
         public static IMessageContext Null { get; private set; }
 
+        private readonly OutgoingMessageUnitOfWork outgoingMessages;
         private readonly Guid messageId;
 
         static IncomingMessageContext()
@@ -50,17 +52,18 @@ namespace Iris.Messaging.Pipeline
         public string UserName
         {
             get { return GetUserName(); }
-        }
+        } 
 
         protected IncomingMessageContext()
         {
         }
-
+       
         public IncomingMessageContext(TransportMessage transportMessage, IServiceLocator serviceLocator)
         {
             TransportMessage = transportMessage;
             messageId = transportMessage.MessageId;
             ServiceLocator = serviceLocator;
+            outgoingMessages = outgoingMessages = BuildOutgoingMessageUnitOfWork(serviceLocator);
         }
 
         public IncomingMessageContext(object localMessage, IServiceLocator serviceLocator)
@@ -71,6 +74,13 @@ namespace Iris.Messaging.Pipeline
             messageId = SequentialGuid.New();
 
             TransportMessage = new TransportMessage(messageId, messageId, Address.Local, TimeSpan.MaxValue, new Dictionary<string, string>(), new byte[0]);
+            outgoingMessages = BuildOutgoingMessageUnitOfWork(serviceLocator);
+        }
+
+        private static OutgoingMessageUnitOfWork BuildOutgoingMessageUnitOfWork(IServiceLocator serviceLocator)
+        {
+            var outgoingContext = serviceLocator.GetInstance<ModulePipeFactory<OutgoingMessageContext>>();
+            return new OutgoingMessageUnitOfWork(outgoingContext, serviceLocator);
         }
 
         public void Process(ModulePipeFactory<IncomingMessageContext> incomingPipeline)
@@ -86,8 +96,14 @@ namespace Iris.Messaging.Pipeline
 
         protected virtual TransactionScope StartTransactionScope()
         {
-            Logger.Debug("Beginning a transaction scope with option[Suppress]");
-            return TransactionScopeUtils.Begin(TransactionScopeOption.Suppress);
+            if (Settings.DisableDistributedTransactions)
+            {
+                Logger.Debug("Beginning a transaction scope with option[Suppress]");
+                return TransactionScopeUtils.Begin(TransactionScopeOption.Suppress);
+            }
+
+            Logger.Debug("Beginning a transaction scope with option[Required]");
+            return TransactionScopeUtils.Begin(TransactionScopeOption.Required);
         }
 
         public string GetUserName()
@@ -105,11 +121,35 @@ namespace Iris.Messaging.Pipeline
             return TransportMessage.Headers.ContainsKey(HeaderKeys.ControlMessageHeader);
         }
 
+        public bool TryGetHeaderValue(string key, out HeaderValue value)
+        {
+            value = null;
+
+            if (TransportMessage.Headers.ContainsKey(key))
+            {
+                value = new HeaderValue(key, TransportMessage.Headers[key]);
+                return true;
+            }
+
+            return false;
+        }
+
         public void SetMessage(object message)
         {
             Mandate.ParameterNotNull(message, "message");
 
             Message = message;
+        }
+
+        public void Enqueue(OutgoingMessageContext outgoingMessage)
+        {
+            outgoingMessages.Enqueue(outgoingMessage);
+        }
+
+        public void SendOutgoingMessages()
+        {
+            outgoingMessages.Commit();
+            outgoingMessages.Clear();
         }
 
         public override int GetHashCode()
@@ -145,7 +185,7 @@ namespace Iris.Messaging.Pipeline
         public static bool operator !=(IncomingMessageContext left, IncomingMessageContext right)
         {
             return !Equals(left, right);
-        }
+        }        
 
         public override string ToString()
         {

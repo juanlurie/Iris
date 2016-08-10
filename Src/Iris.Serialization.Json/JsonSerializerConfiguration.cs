@@ -16,6 +16,7 @@ namespace Iris.Serialization.Json
             public void Register(IContainerBuilder containerBuilder)
             {
                 containerBuilder.RegisterType<JsonObjectSerializer>(DependencyLifecycle.SingleInstance);
+                containerBuilder.RegisterType<JsonMessageSerializer>(DependencyLifecycle.SingleInstance);
             }
         }
     }

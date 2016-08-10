@@ -10,7 +10,7 @@ using Iris.Reflection;
 
 namespace Iris.Messaging.Configuration
 {
-    public class Configure : IConfigureEndpoint
+    public class Configure : IConfigureEndpoint, IConfigureWorker
     {
         private static readonly Configure Instance;
         private static IContainerBuilder containerBuilder;        
@@ -60,6 +60,75 @@ namespace Iris.Messaging.Configuration
             return this;
         }
 
+        IConfigureEndpoint IConfigureEndpoint.DisablePerformanceMonitoring()
+        {
+            Settings.DisablePerformanceMonitoring = true;
+            return this;
+        }
+
+        public IConfigureEndpoint DisableMessageAudit()
+        {
+            Settings.DisableMessageAudit = true;
+            return this;
+        }
+
+        public IConfigureEndpoint NumberOfWorkers(int numberOfWorkers)
+        {
+            Settings.NumberOfWorkers = numberOfWorkers;
+            return this;
+        }
+
+        public IConfigureEndpoint RegisterMessageRoute<TMessage>(Address endpointAddress)
+        {
+            var router = Settings.RootContainer.GetInstance<IRegisterMessageRoute>();
+            router.RegisterRoute(typeof(TMessage), endpointAddress);
+            return this;
+        }
+
+        public IConfigureEndpoint DisableHeartbeatService()
+        {
+            Settings.DisableHeartbeatService = true;
+            return this;
+        }
+
+        public IConfigureEndpoint DisableDistributedTransactions()
+        {
+            Settings.DisableDistributedTransactions = true;
+            return this;
+        }
+
+        IConfigureWorker IConfigureWorker.SecondLevelRetryPolicy(int attempts, TimeSpan delay)
+        {
+            Settings.SecondLevelRetryAttempts = attempts;
+            Settings.SecondLevelRetryDelay = delay;
+            return this;
+        }
+
+        IConfigureWorker IConfigureWorker.FirstLevelRetryPolicy(int attempts)
+        {
+            Settings.FirstLevelRetryAttempts = attempts;
+            return this;
+        }
+
+        IConfigureWorker IConfigureWorker.FlushQueueOnStartup(bool flush)
+        {
+            Settings.FlushQueueOnStartup = flush;
+            return this;
+        }
+
+        public IConfigureWorker CircuitBreakerPolicy(int circuitBreakerThreshold, TimeSpan circuitBreakerReset)
+        {
+            Settings.CircuitBreakerThreshold = circuitBreakerThreshold;
+            Settings.CircuitBreakerReset = circuitBreakerReset;
+            return this;
+        }
+
+        public IConfigureWorker DisablePerformanceMonitoring()
+        {
+            Settings.DisablePerformanceMonitoring = true;
+            return this;
+        }
+
         public IConfigureEndpoint RegisterDependencies<T>() where T : IRegisterDependencies, new()
         {
             return RegisterDependencies(new T());
@@ -88,6 +157,18 @@ namespace Iris.Messaging.Configuration
             return this;
         }        
 
+        public IConfigureEndpoint SendOnlyEndpoint()
+        {
+            Settings.IsSendOnly = true;
+            return this;
+        }
+
+        public IConfigureEndpoint UseMySql()
+        {
+            Settings.UseMySql = true;
+            return this;
+        }
+
         public IConfigureEndpoint UserNameResolver(Func<string> userNameResolver)
         {
             Settings.UserNameResolver = userNameResolver;
@@ -112,6 +193,8 @@ namespace Iris.Messaging.Configuration
 
             MapMessageTypes();
             RunInitializers();
+            SubscribeToEvents();
+            CreateQueues();
             StartServices();
         }
 
@@ -151,6 +234,41 @@ namespace Iris.Messaging.Configuration
             foreach (var init in intializers)
             {
                 init.Initialize();
+            }
+        }
+
+        private static void CreateQueues()
+        {
+            var queueCreator = Settings.RootContainer.GetInstance<ICreateMessageQueues>();
+            queueCreator.CreateQueueIfNecessary(Settings.MonitoringEndpoint);
+
+
+            if(Settings.IsSendOnly)
+                return;
+
+            queueCreator.CreateQueueIfNecessary(Address.Local);
+            queueCreator.CreateQueueIfNecessary(Settings.ErrorEndpoint);
+            queueCreator.CreateQueueIfNecessary(Settings.AuditEndpoint);
+
+            if (Settings.FlushQueueOnStartup)
+            {
+                queueCreator.Purge(Address.Local);
+            }
+        }
+
+        private static void SubscribeToEvents()
+        {
+            if (!Settings.AutoSubscribeEvents)
+            {
+                 return;   
+            }
+
+            foreach (var eventType in HandlerCache.GetAllHandledMessageContracts().Where(type => Settings.IsEventType(type)))
+            {
+                if (typeof (IDomainEvent).IsAssignableFrom(eventType) && !Settings.SubsribeToDomainEvents)
+                        continue;
+
+                Settings.Subscriptions.Subscribe(eventType);
             }
         }
 

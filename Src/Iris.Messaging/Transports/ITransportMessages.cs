@@ -9,9 +9,10 @@ namespace Iris.Messaging.Transports
     /// <remarks>
     /// Object instances which implement this interface must be designed to be multi-thread safe.
     /// </remarks>
-    public interface ITransportMessages : IDisposable
+    public interface ITransportMessages : IAmStartable, IDisposable
     {
         IMessageContext CurrentMessage { get; }
+        void SendMessage(OutgoingMessageContext outgoingMessageContext);
         void ProcessMessage(IncomingMessageContext incomingContext);
     }
 }

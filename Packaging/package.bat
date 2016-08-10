@@ -1,4 +1,4 @@
-set var=1.0.11
+set var=1.0.18
 
 c:\LocalNugetPackages\nuget pack Iris.Core.nuspec -Version %var%
 c:\LocalNugetPackages\nuget pack Iris.Messaging.nuspec -Version %var%

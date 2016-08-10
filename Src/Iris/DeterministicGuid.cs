@@ -14,7 +14,7 @@ namespace Iris
         /// <remarks>See <a href="http://code.logos.com/blog/2011/04/generating_a_deterministic_guid.html">Generating a deterministic GUID</a>.</remarks>
         public static Guid Create(string name)
         {
-            return Create(HermesNamesapce, name, 5);
+            return Create(IrisNamesapce, name, 5);
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace Iris
         public static readonly Guid IsoOidNamespace = new Guid("6ba7b812-9dad-11d1-80b4-00c04fd430c8");
 
         /// <summary>
-        /// The namespace for Hermes IDs
+        /// The namespace for Iris IDs
         /// </summary>
-        public static readonly Guid HermesNamesapce = new Guid("AE7FAD17-7087-443B-B785-6CE18DFAA0E7");
+        public static readonly Guid IrisNamesapce = new Guid("AE7FAD17-7087-443B-B785-6CE18DFAA0E7");
 
         // Converts a GUID (expressed as a byte array) to/from network order (MSB-first).
         internal static void SwapByteOrder(byte[] guid)

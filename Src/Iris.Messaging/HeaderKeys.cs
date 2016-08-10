@@ -2,25 +2,25 @@
 {
     public class HeaderKeys
     {
-        public const string MessageType = "Hermes.MessageType";
-        public const string SentTime = "Hermes.SentTime";
-        public const string ReceivedTime = "Hermes.ReceivedTime";
-        public const string CompletedTime = "Hermes.CompletedTime";
-        public const string FirstLevelRetryCount = "Hermes.Retry.Count";
-        public const string SecondLevelRetryCount = "Hermes.SecondLevelRetry.Count";
-        public const string FailureDetails = "Hermes.Failed.Exception";
-        public const string TimeoutExpire = "Hermes.Timeout.Expire";
-        public const string RouteExpiredTimeoutTo = "Hermes.Timeout.RouteExpiredTimeoutTo";
-        public const string OriginalReplyToAddress = "Hermes.Timeout.ReplyToAddress;";
-        public const string ControlMessageHeader = "Hermes.ControlMessage";
-        public const string ReturnErrorCode = "Hermes.ReturnErrorCode";
-        public const string ProcessingEndpoint = "Hermes.ProcessingEndpoint";
-        public const string UserName = "Hermes.UserName";
-        public static string MonitoringPeriod = "Hermes.MonitoringPeriod";
-        public static string TotalMessagesProcessed = "Hermes.TotalMessagesProcessed";
-        public static string TotalErrorMessages = "Hermes.TotalErrorMessages";
-        public static string AverageTimeToDeliver = "Hermes.AverageTimeToDeliver";
-        public static string AverageTimeToProcess = "Hermes.AverageTimeToProcess";
-        public static string Heartbeat = "Hermes.Heartbeat";
+        public const string MessageType = "Iris.MessageType";
+        public const string SentTime = "Iris.SentTime";
+        public const string ReceivedTime = "Iris.ReceivedTime";
+        public const string CompletedTime = "Iris.CompletedTime";
+        public const string FirstLevelRetryCount = "Iris.Retry.Count";
+        public const string SecondLevelRetryCount = "Iris.SecondLevelRetry.Count";
+        public const string FailureDetails = "Iris.Failed.Exception";
+        public const string TimeoutExpire = "Iris.Timeout.Expire";
+        public const string RouteExpiredTimeoutTo = "Iris.Timeout.RouteExpiredTimeoutTo";
+        public const string OriginalReplyToAddress = "Iris.Timeout.ReplyToAddress;";
+        public const string ControlMessageHeader = "Iris.ControlMessage";
+        public const string ReturnErrorCode = "Iris.ReturnErrorCode";
+        public const string ProcessingEndpoint = "Iris.ProcessingEndpoint";
+        public const string UserName = "Iris.UserName";
+        public static string MonitoringPeriod = "Iris.MonitoringPeriod";
+        public static string TotalMessagesProcessed = "Iris.TotalMessagesProcessed";
+        public static string TotalErrorMessages = "Iris.TotalErrorMessages";
+        public static string AverageTimeToDeliver = "Iris.AverageTimeToDeliver";
+        public static string AverageTimeToProcess = "Iris.AverageTimeToProcess";
+        public static string Heartbeat = "Iris.Heartbeat";
     }
 }

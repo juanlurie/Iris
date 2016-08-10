@@ -43,7 +43,7 @@ namespace Iris.ServiceHost
 
             if (descriptionAttribute == null || String.IsNullOrWhiteSpace(descriptionAttribute.Description))
             {
-                return "A service hosted by Hermes Service-Host";
+                return "A service hosted by Iris Service-Host";
             }
 
             return descriptionAttribute.Description;
@@ -60,10 +60,10 @@ namespace Iris.ServiceHost
 
             if (titleAttribute == null || String.IsNullOrWhiteSpace(titleAttribute.Title))
             {
-                return String.Format("Hermes.{0}", hostableService.Assembly.GetName().Name); 
+                return String.Format("Iris.{0}", hostableService.Assembly.GetName().Name); 
             }
 
-            return String.Format("Hermes.{0}", titleAttribute.Title); 
+            return String.Format("Iris.{0}", titleAttribute.Title); 
         }
 
         private T GetServiceAttribute<T>() where T : Attribute

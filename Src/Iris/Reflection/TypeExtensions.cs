@@ -40,7 +40,7 @@ namespace Iris.Reflection
 
                 if (args.Length == 2)
                     if (typeof(KeyValuePair<,>).MakeGenericType(args) == t)
-                        result = "Hermes." + result;
+                        result = "Iris." + result;
 
                 lock (TypeToNameLookup)
                     TypeToNameLookup[t] = result;

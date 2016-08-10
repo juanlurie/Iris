@@ -1,6 +1,6 @@
 ﻿namespace Iris.Messaging
 {
-    public interface IHermesMessage
+    public interface IIrisMessage
     {
         
     }

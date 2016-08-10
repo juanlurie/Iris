@@ -1,0 +1,79 @@
+﻿using System;
+using System.Timers;
+using Iris.Messaging.Bus;
+using Iris.Messaging.Configuration;
+using Iris.Messaging.Monitoring;
+using Iris.Messaging.Transports;
+using Iris.Pipes;
+
+namespace Iris.Messaging.Pipeline.Modules
+{
+    public class PerformanceMetricsModule : IModule<IncomingMessageContext>, IDisposable
+    {
+        private readonly PerformanceMetricCollection performanceMetrics;
+        private readonly ControlBus bus;
+        private readonly Timer timer;
+        private readonly TimeSpan monitoringPeriod = TimeSpan.FromSeconds(10);
+
+        public PerformanceMetricsModule(ControlBus bus)
+        {
+            this.bus = bus;
+            performanceMetrics = new PerformanceMetricCollection();
+
+            timer = new Timer
+            {
+                Interval = monitoringPeriod.TotalMilliseconds,
+                AutoReset = true,
+            };
+
+            timer.Elapsed += Elapsed;
+
+            Start();
+        }
+
+        private void Start()
+        {
+            if (Settings.DisablePerformanceMonitoring)
+                return;
+
+            timer.Start();
+        }
+
+        public bool Process(IncomingMessageContext input, Func<bool> next)
+        {
+            if (Settings.DisablePerformanceMonitoring || input.IsLocalMessage)
+                return next();
+
+            DateTime receivedTime = DateTime.UtcNow;
+
+            if (next())
+            {
+                performanceMetrics.Add(receivedTime, input);
+                return true;
+            }
+
+            return false;
+        }
+
+        void Elapsed(object sender, ElapsedEventArgs e)
+        {
+            PerformanceMetric endpointPerformance = performanceMetrics.GetEndpointPerformance();
+            
+            var headers = new[]
+            {
+                new HeaderValue(HeaderKeys.AverageTimeToProcess, endpointPerformance.AverageTimeToProcess.ToString()),
+                new HeaderValue(HeaderKeys.AverageTimeToDeliver, endpointPerformance.AverageTimeToDeliver.ToString()),
+                new HeaderValue(HeaderKeys.TotalErrorMessages, endpointPerformance.TotalErrorMessages.ToString()),
+                new HeaderValue(HeaderKeys.TotalMessagesProcessed, endpointPerformance.TotalMessagesProcessed.ToString()),
+                new HeaderValue(HeaderKeys.MonitoringPeriod, monitoringPeriod.Seconds.ToString()),
+            };
+
+            bus.Send(Settings.MonitoringEndpoint, headers);
+        }
+
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
+    }
+}

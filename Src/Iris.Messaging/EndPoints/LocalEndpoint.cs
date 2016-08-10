@@ -24,6 +24,10 @@ namespace Iris.Messaging.EndPoints
             ConfigureEndpoint(configuration);
             ConfigurePipeline(containerBuilder);
 
+            Settings.IsSendOnly = true;
+            Settings.IsLocalEndpoint = true;
+            Settings.AutoSubscribeEvents = false;
+            Settings.FlushQueueOnStartup = true;
             Settings.RootContainer = containerBuilder.BuildContainer();
         }
 
@@ -38,6 +42,8 @@ namespace Iris.Messaging.EndPoints
         protected virtual void ConfigurePipeline(TContainerBuilder containerBuilder)
         {
             var incomingPipeline = new ModulePipeFactory<IncomingMessageContext>()
+                .Add<CommandValidationModule>()
+                .Add<EnqueuedMessageSenderModule>()
                 .Add<UnitOfWorkModule>()
                 .Add<DispatchMessagesModule>();
 
